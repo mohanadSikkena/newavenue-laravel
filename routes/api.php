@@ -4,6 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\PropertiesController;
 use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\FeaturesController;
+use App\Http\Controllers\LocationsController;
+use App\Http\Controllers\SubCategoriesController;
+use App\Http\Controllers\LicencesController;
+use App\Http\Controllers\FinishesController;
+
+use App\Http\Controllers\PrimaryPropertiesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,20 +45,19 @@ Route::post('admin-register',[AuthController::class,'adminRegister']);
 
 
 //******************************User Api  ***************************/
-
 Route::get('properties',[PropertiesController::class,'api_index']);
 Route::get('properties/ads',[PropertiesController::class,'api_ads']);
 
 Route::get('properties/most-views',[PropertiesController::class,'api_most_views']);
 
-Route::get('properties/get-by-category',[PropertiesController::class,'api_getByCategory']);
+Route::get('properties/get-by-category/{id}',[SubCategoriesController::class,'api_getByCategory']);
 
 Route::get('properties/search',[PropertiesController::class,'api_search']);
 
 Route::get('agents/{id}/properties',[PropertiesController::class,'api_agent_prop']);
 
-Route::get('primary',[PropertiesController::class,'api_getPrimary']);
-Route::get('properties/filter', [PropertiesController::class,'api_filter']);
+// Route::get('primary',[PropertiesController::class,'api_getPrimary']);
+// Route::get('properties/filter', [PropertiesController::class,'api_filter']);
 //********************************************************* */
 
 
@@ -82,7 +88,6 @@ Route::post('register',[AuthController::class,'createUser'])->middleWare('auth:s
 Route::delete('agents/{id}/delete-agent',[AuthController::class,'deleteUser'])->middleWare('auth:sanctum');
 Route::post('properties/ad',[PropertiesController::class,'api_add_ad'])->middleWare('auth:sanctum');
 Route::delete('properties/ad/{id}/delete',[PropertiesController::class,'api_delete_ad'])->middleWare('auth:sanctum');
-
 //**************************************************************** */
 
 Route::get('properties/{id}',[PropertiesController::class,'api_show']);
@@ -95,3 +100,46 @@ Route::Post('customer/add-to-favourite',[CustomersController::class,'api_add_to_
 Route::get('customer/create-new-customer',[CustomersController::class,'api_create_customer']);
 Route::post('customer/add-customer-property',[CustomersController::class,'api_add_customer_property']);
 Route::delete('customers/{id}',[CustomersController::class,'api_delete_customer_property'])->middleWare('auth:sanctum');
+
+
+
+
+// ***************************Features*********************************
+
+Route::get('features',[FeaturesController::class,'api_index']);
+
+Route::delete('features/{id}/delete',[FeaturesController::class,'api_destroy'])->middleWare('auth:sanctum');
+Route::post('features',[FeaturesController::class,'api_store'])->middleWare('auth:sanctum');
+
+
+// *******************************************Primary********************
+
+Route::get('primary',[PrimaryPropertiesController::class,'api_index']);
+Route::post('primary', [PrimaryPropertiesController::class,'api_store'])->middleWare('auth:sanctum');
+Route::delete('primary/{id}/delete', [PrimaryPropertiesController::class,'api_destroy'])->middleWare('auth:sanctum');
+Route::get('primary/{id}',[PrimaryPropertiesController::class,'api_show']);
+
+//**********************************Locations ************************** */
+
+Route::get('locations/{id}/primary',[LocationsController::class,'api_primary']);
+Route::get('locations',[LocationsController::class,'api_index']);
+Route::post('locations',[LocationsController::class,'api_store'])->middleWare('auth:sanctum');
+Route::delete('locations/{id}/delete',[LocationsController::class,'api_destroy'])->middleWare('auth:sanctum');
+
+//****************************************Categories ************************* */
+Route::get('categories',[SubCategoriesController::class,'api_index']);
+Route::post('categories',[SubCategoriesController::class,'api_store'])->middleWare('auth:sanctum');
+Route::delete('categories/{id}/delete',[SubCategoriesController::class,'api_destroy'])->middleWare('auth:sanctum');
+
+//***************************************Licences ************************************/
+Route::get('/licences',[LicencesController::class,'api_index']);
+Route::post('/licences',[LicencesController::class,'store'])->middleWare('auth:sanctum');
+Route::put('/licences/{id}',[LicencesController::class,'update'])->middleWare('auth:sanctum');
+Route::delete('/licences/{id}',[LicencesController::class,'destroy'])->middleWare('auth:sanctum');
+//***************************************finishis *************************************** */
+Route::get('/finishes',[FinishesController::class,'api_index']);
+Route::post('/finishes',[FinishesController::class,'store'])->middleWare('auth:sanctum');
+Route::put('/finishes/{id}',[FinishesController::class,'update'])->middleWare('auth:sanctum');
+Route::delete('/finishes/{id}',[FinishesController::class,'destroy'])->middleWare('auth:sanctum');
+
+

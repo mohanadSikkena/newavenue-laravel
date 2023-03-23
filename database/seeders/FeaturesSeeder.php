@@ -17,10 +17,10 @@ class FeaturesSeeder extends Seeder
         //
 
         $feature=new Feature;
-        $feature->name="Balcony";
+        $feature->name="Terrace";
         $feature->save();
         $feature=new Feature;
-        $feature->name="Cable-Ready";
+        $feature->name="Air Conditioned";
         $feature->save();
         $feature=new Feature;
         $feature->name="Centeral Air Conditioning";
@@ -29,10 +29,10 @@ class FeaturesSeeder extends Seeder
         $feature->name="Conference Room";
         $feature->save();
         $feature=new Feature;
-        $feature->name="Covered parking";
+        $feature->name="Parking";
         $feature->save();
         $feature=new Feature;
-        $feature->name="Pantry";
+        $feature->name="Shared Meeting Room";
         $feature->save();
         $feature=new Feature;
         $feature->name="Private Garden";
@@ -41,7 +41,22 @@ class FeaturesSeeder extends Seeder
         $feature->name="Security";
         $feature->save();
         $feature=new Feature;
-        $feature->name="Shared GYM";
+        $feature->name="Security System";
+        $feature->save();
+        $feature=new Feature;
+        $feature->name="Open Space";
+        $feature->save();
+        $feature=new Feature;
+        $feature->name="Street Location";
+        $feature->save();
+
+        $feature=new Feature;
+        $feature->name="Near Transportation";
+        $feature->save();
+
+
+        $feature=new Feature;
+        $feature->name="Near Resturants";
         $feature->save();
     }
 }

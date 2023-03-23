@@ -110,88 +110,57 @@ class PropertiesController extends Controller
         //
     }
 
+
+
     public function api_most_views(){
-        $properties =Property::
-        where('confirmed',true)
-        ->with('images:image,property_id')
-        ->with('features:name')
-        ->with('agent:name,id,about,img,description')
-        ->with('details:name,details,property_id')
+        $properties =Property::withCommonReleations()
+
+        ->where('confirmed',true)
+
         ->orderBy('views','desc')
         ->take(5)
         ->get();
         return response()->json($properties, 200,);
 
     }
-    public function api_getPrimary(){
-        $properties = Property::where('category_id',1)
-        ->where('confirmed',true)
-        ->with('images:image,property_id')
-        ->with('features:name')
-        ->with('agent:name,id,about,img,description')
-        ->with('details:name,details,property_id')
-        ->get();
-        return response()->json($properties, 200,);
-    }
+
 
 
     public function api_index(){
-        if(request('sell_type')=="buy"){
-            $properties =Property::where('sell_type_id',1)
-            ->with('images:image,property_id')
-            ->with('features:name')
-            ->with('agent:name,id,about,img,description')
-            ->with('details:name,details,property_id')
-            ->where('confirmed',true)
-            ->paginate(10);
-            $count=Property::where('sell_type_id',1)->where('confirmed',true)->count();
+        $validSellTypes=['buy','rent'];
+        $sellType = request('sell_type');
+        if(!in_array($sellType, $validSellTypes)) {
+            return response()->json(['error' => 'Invalid sell type'], 400);
         }
-        elseif(request('sell_type')=="rent"){
-            $properties =Property::where('sell_type_id',2)
-            ->with('images:image,property_id')
-            ->with('features:name')
-            ->with('agent:name,id,about,img,description')
-            ->with('details:name,details,property_id')
-            ->where('confirmed',true)
-            ->paginate(10);
-            $count=Property::where('sell_type_id',2)->where('confirmed',true)->count();
+        $query = Property::withCommonReleations()->where('confirmed', true);
 
+        if ($sellType == 'buy') {
+            $query->where('sell_type_id', 1);
+        } elseif ($sellType == 'rent') {
+            $query->where('sell_type_id', 2);
         }
-        else {
-            $properties =Property::
-            with('images:image,property_id')
-            ->with('features:name')
-            ->with('agent:name,id,about,img,description')
-            ->with('details:name,details,property_id')
-            ->where('confirmed',true)
-            ->paginate(10);
-
-            $count=Property::where('confirmed',true)->count();
-
-            // $properties =Property::all();
-        }
-        $response=["properties"=>$properties,"count"=>$count];
-        return response()->json($response);
+        $properties = $query->paginate(10);
+        $count = $query->count();
+        $response=[
+            "properties" => $properties,
+            "count" => $count,
+        ];
+        return response()->json($response,200);
     }
 
     public function api_trash(){
         if(Auth::user()->isAdmin){
             $properties=Property::
-            with('images:image,property_id')
-            ->with('features:name')
-            ->with('agent:name,id')
-            ->with('details:name,details,property_id')
+            withCommonReleations()
             ->onlyTrashed()
             ->get();
             return response()->json($properties, 200, );
         }
         else{
             $properties=Property::
-            where('agent_id',Auth::user()->id)
-            ->with('images:image,property_id')
-            ->with('features:name')
-            ->with('agent:name,id')
-            ->with('details:name,details,property_id')
+            withCommonReleations()
+            ->where('agent_id',Auth::user()->id)
+
             ->onlyTrashed()
 
             ->get();
@@ -203,11 +172,7 @@ class PropertiesController extends Controller
 
         if(Auth::user()->isAdmin){
             $properties =Property::
-            with('images:image,property_id')
-            ->with('features:name')
-            ->with('agent:name,id')
-            ->with('details:name,details,property_id')
-
+            withCommonReleations()
             ->where('confirmed',false)
             ->get();
             return response()->json($properties);
@@ -249,14 +214,14 @@ class PropertiesController extends Controller
 
             $property = new Property;
             $property->area=request("area");
-
+            $property->licence_id=request('licence');
+            $property->finish_id=request('finish');
             $property->description = request("description");
 
 
             $property->agent_id=Auth::user()->id;
             $property->sell_type_id = request("sellType");
 
-            $property->category_id = request("category");
 
             $property->sub_category_id = request("subCategory");
 
@@ -317,7 +282,6 @@ class PropertiesController extends Controller
         if(Auth::user()->id==$property->agent_id || Auth::user()->isAdmin){
             $property->description=request('description');
             $property->sell_type_id=request('sellType');
-            $property->category_id=request('category');
             $property->sub_category_id=request('subCategory');
             $property->save();
 
@@ -328,23 +292,7 @@ class PropertiesController extends Controller
     }
 //*************************************************************************** */
 
-    public function api_getByCategory(){
-        if(request('category_id')!='' && request('sub_category_id')!=''){
-            $properties= Property::
-            where('category_id',request('category_id'))
-            ->where('sub_category_id',request('sub_category_id'))
-            ->with('images:property_id,image')
-            ->with('details:property_id,name,details')
-            ->with('features:name')
-            ->with('agent:name,id,about,img,description')
-            ->where('confirmed',true)
-            ->get();
 
-            return response()->json($properties, 200);
-        }
-        return response()->json('failed');
-
-    }
 
     public function api_destroy($id){
         $property=Property::find($id);
@@ -385,10 +333,7 @@ class PropertiesController extends Controller
     }
 
     public function api_show($id){
-        $property=Property::with('images:property_id,image')
-        ->with('features:name')
-        ->with('details:property_id,name,details')
-        ->with('agent:name,id,about,img,description')
+        $property=Property::withCommonReleations()
         ->find($id);
         $property->views+=1;
         $property->save();
@@ -397,11 +342,10 @@ class PropertiesController extends Controller
 
     public function api_agent_prop($id){
         $properties=
-        Property::where('agent_id',$id)
+        Property::
+        withCommonReleations()
+        ->where('agent_id',$id)
         ->where('confirmed',true)
-        ->with('images:image,property_id')
-        ->with('details:details,name,property_id')
-        ->with('features:name')
         ->get();
         return response()->json($properties, 200,);
     }
@@ -443,10 +387,7 @@ class PropertiesController extends Controller
     }
     public function api_search(){
         $properties =Property::
-            with('images:image,property_id')
-            ->with('features:name')
-            ->with('agent:name,id,about,img,description')
-            ->with('details:name,details,property_id')
+            withCommonReleations()
             ->where('confirmed',true)
             ->where(function ($query){
                 $term=request('word');
@@ -457,39 +398,5 @@ class PropertiesController extends Controller
             return response()->json($properties, 200);
     }
 
-    public function api_filter(Request $request){
-        if(request('from_search')){
-
-            $properties =Property::
-            with('images:image,property_id')
-            ->with('features:name')
-            ->with('agent:name,id,about,img,description')
-            ->with('details:name,details,property_id')
-            ->where('confirmed',true)
-            ->where(function ($query){
-                $term=request('word');
-                $query->where('location','LIKE',"%$term%");
-            })
-            ->whereBetween('price',[request('min_price'), request('max_price')])
-            ->whereBetween('area',[request('min_area',), request('max_area')])
-            ->where('sell_type_id',request('sale_type'))
-            ->where('category_id' , request('category'))
-            ->get();
-        }else{
-            $properties= Property::
-            where('category_id',request('category'))
-            ->where('sub_category_id',request('sub_category_id'))
-            ->with('images:property_id,image')
-            ->with('details:property_id,name,details')
-            ->with('features:name')
-            ->with('agent:name,id,about,img,description')
-            ->whereBetween('price',[request('min_price'), request('max_price')])
-            ->whereBetween('area',[request('min_area',), request('max_area')])
-            ->where('sell_type_id',request('sale_type'))
-            ->where('confirmed',true)
-            ->get();
-        }
-        return response()->json($properties, 200);
-    }
 
 }

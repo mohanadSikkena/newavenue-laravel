@@ -10,7 +10,5 @@ class CustomerProperty extends Model
     use HasFactory;
 
 
-    public function images(){
-        return $this->hasMany(CustomerPropertyImage::class);
-    }
+
 }

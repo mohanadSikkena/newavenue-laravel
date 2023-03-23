@@ -59,24 +59,9 @@ class CustomersController extends Controller
 
     public function api_add_customer_property(Request $request){
         $customerProperty=new CustomerProperty;
-        $customerProperty->location=request('location');
-        $customerProperty->description=request('description');
         $customerProperty->name=request('name');
         $customerProperty->phone=request('phone');
-        $customerProperty->price=request('price');
-        $customerProperty->sell_type_id=request('sellType');
         $customerProperty->save();
-
-
-        if($request->hasFile('images')){
-            foreach($request->file('images') as $img){
-
-            $name=$img->store('public/customer/properties');
-            $image=new CustomerPropertyImage;
-            $image->image=$name;
-            $image->customer_property_id=$customerProperty->id;
-            $image->save();
-        }}
         return response()->json('added successfully', 200, );
 
 
@@ -84,7 +69,7 @@ class CustomersController extends Controller
 
     public function api_getcustomers_properties(){
         if (Auth::user()->isAdmin){
-            $properties=CustomerProperty::with('images')->get();
+            $properties=CustomerProperty::all();
             return response()->json($properties, 200, );
         }
         return response()->json('you dont have the permission', 200,);
@@ -93,9 +78,6 @@ class CustomersController extends Controller
     public function api_delete_customer_property($id){
         if(Auth::user()->isAdmin){
             $property =CustomerProperty::find($id);
-            foreach ($property->images as $image) {
-                Storage::delete($image->image);
-            }
             $property->delete();
             return response()->json('deleted successfully', 200,);
         }

@@ -4,34 +4,35 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Feature;
+use Illuminate\Support\Facades\Auth;
 
 class FeaturesController extends Controller
 {
-    public function __construct(){
-        $this->middleware(['auth']);
-    }
+    // public function __construct(){
+    //     $this->middleware(['auth']);
+    // }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
-        $features=Feature::all();
-        return view('features.list', compact('features'));
-    }
+    // public function index()
+    // {
+    //     //
+    //     $features=Feature::all();
+    //     return view('features.list', compact('features'));
+    // }
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-        return view('features.new');
-    }
+    // public function create()
+    // {
+    //     //
+    //     return view('features.new');
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -39,16 +40,16 @@ class FeaturesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    // public function store(Request $request)
+    // {
+    //     //
 
-        $feature=new Feature;
-        $feature->name=$request->name;
-        $feature->save();
-        
-        return redirect()->route('features.index');
-    }
+    //     $feature=new Feature;
+    //     $feature->name=$request->name;
+    //     $feature->save();
+
+    //     return redirect()->route('features.index');
+    // }
 
     /**
      * Display the specified resource.
@@ -79,10 +80,10 @@ class FeaturesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+    // public function update(Request $request, $id)
+    // {
+    //     //
+    // }
 
     /**
      * Remove the specified resource from storage.
@@ -90,8 +91,30 @@ class FeaturesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    // public function destroy($id)
+    // {
+    //     //
+    // }
+
+    public function api_index(){
+        $features=Feature::all();
+        return response()->json($features, 200,);
     }
+    public function api_store(){
+        if(Auth::user()->isAdmin){
+            $feature =new Feature;
+        $feature->name=request("name");
+        $feature->save();
+        return response()->json("A Feature Has Been Added Successfully", 200,);
+        }
+    }
+    public function api_destroy($id){
+        $feature=Feature::find($id);
+        if(Auth::user()->isAdmin){
+            $feature->delete();
+        return response()->json('A Feature Has been Deleted Successfully', 200,);
+        }
+    }
+
+
 }

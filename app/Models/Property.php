@@ -5,9 +5,10 @@ use App\Models\Property_image;
 use App\Models\Property_detail;
 use App\Models\Feature;
 use App\Models\Sell_type;
-use App\Models\Category;
 use App\Models\Sub_category;
 use App\Models\Customer;
+use App\Models\Licence;
+use App\Models\Finish;
 
 
 
@@ -20,6 +21,24 @@ class Property extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+
+
+
+    public static function withCommonReleations(){
+        return static::with(
+        'images:image,property_id',
+        'features:name',
+        'agent:name,id,about,img,description',
+        'details:name,details,property_id',
+        'subCategory:name,id',
+        'licence:name,id',
+        'finish:name,id',
+        'sellType:name,id'
+    );
+    }
+
+
 
 
 
@@ -46,12 +65,13 @@ class Property extends Model
     public function sellType(){
         return $this->belongsTo(Sell_type::class);
     }
-
-    public function category(){
-        return $this->belongsTo(Category::class);
-    }
-
     public function subCategory(){
         return $this->belongsTo(Sub_category::class);
+    }
+    public function licence(){
+        return $this->belongsTo(Licence::class);
+    }
+    public function finish(){
+        return $this->belongsTo(Finish::class);
     }
 }

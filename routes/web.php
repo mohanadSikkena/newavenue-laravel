@@ -22,18 +22,18 @@ use App\Http\Controllers\PropertiesController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/test', function () {
-    return view('dashboard');
-});
-Route::get('/info', function () {
-    return view('info');
-});
-Route::get('/folder', function () {
-    return view('sub_categories.infolde');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+// Route::get('/test', function () {
+//     return view('dashboard');
+// });
+// Route::get('/info', function () {
+//     return view('info');
+// });
+// Route::get('/folder', function () {
+//     return view('sub_categories.infolde');
+// });
 // //***********************Categories Routes */
 // Route::get('/categories',[CategoriesController::class,'index'])->name('categories.index');
 // Route::get('/categories/new',[CategoriesController::class,'create'])->name('categories.create');

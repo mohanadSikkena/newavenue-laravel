@@ -22,10 +22,12 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            CategorySeeder::class,
+            LocationSeeder::class,
             SellTypeSeeder::class,
             SubCategorySeeder::class,
-            FeaturesSeeder::class
+            FeaturesSeeder::class,
+            FinishSeeder::class,
+            LicenceSeeder::class
         ]);
     }
 }
