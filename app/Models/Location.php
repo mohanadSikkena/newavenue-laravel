@@ -13,4 +13,5 @@ class Location extends Model
         return $this->hasMany(PrimaryProperty::class)
         ->select(['id','name','delivery_date','price','min_space','max_space'])->with('images:image,primary_property_id');
       }
+
 }

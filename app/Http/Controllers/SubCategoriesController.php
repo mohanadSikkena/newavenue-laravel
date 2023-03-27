@@ -14,7 +14,7 @@ class SubCategoriesController extends Controller
 
 
     public function api_index(){
-        $categories=Sub_category::all();
+        $categories=Sub_category::select('id', 'name')->withCount('properties')->get();
         return response()->json($categories, 200,);
     }
 

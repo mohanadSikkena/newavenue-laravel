@@ -5,116 +5,75 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Feature;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class FeaturesController extends Controller
 {
-    // public function __construct(){
-    //     $this->middleware(['auth']);
-    // }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function index()
-    // {
-    //     //
-    //     $features=Feature::all();
-    //     return view('features.list', compact('features'));
-    // }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function create()
-    // {
-    //     //
-    //     return view('features.new');
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    // public function store(Request $request)
-    // {
-    //     //
-
-    //     $feature=new Feature;
-    //     $feature->name=$request->name;
-    //     $feature->save();
-
-    //     return redirect()->route('features.index');
-    // }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function api_index()
     {
-        //
+        $features = Feature::all();
+        return response()->json([
+            'message' => 'Features retrieved successfully.',
+            'data' => $features
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function api_store(Request $request)
     {
-        //
-    }
+        if (!Auth::user()->isAdmin) {
+            return response()->json([
+                'message' => 'Only admins can create features.',
+            ], 403);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function update(Request $request, $id)
-    // {
-    //     //
-    // }
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255|unique:features,name',
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function destroy($id)
-    // {
-    //     //
-    // }
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation errors.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
 
-    public function api_index(){
-        $features=Feature::all();
-        return response()->json($features, 200,);
-    }
-    public function api_store(){
-        if(Auth::user()->isAdmin){
-            $feature =new Feature;
-        $feature->name=request("name");
+        $feature = new Feature;
+        $feature->name = $request->input('name');
         $feature->save();
-        return response()->json("A Feature Has Been Added Successfully", 200,);
-        }
-    }
-    public function api_destroy($id){
-        $feature=Feature::find($id);
-        if(Auth::user()->isAdmin){
-            $feature->delete();
-        return response()->json('A Feature Has been Deleted Successfully', 200,);
-        }
+
+        return response()->json([
+            'message' => 'Feature created successfully.',
+            'data' => $feature
+        ], 201);
     }
 
+    public function api_destroy($id)
+    {
+        if (!Auth::user()->isAdmin) {
+            return response()->json([
+                'message' => 'Only admins can delete features.',
+            ], 403);
+        }
 
+        if (!is_numeric($id)) {
+            return response()->json([
+                'message' => 'The ID must be an integer.'
+            ], 422);
+        }
+
+        $feature = Feature::find($id);
+
+        if (!$feature) {
+            return response()->json([
+                'message' => 'Feature not found.'
+            ], 404);
+        }
+
+        $feature->delete();
+
+        return response()->json([
+            'message' => 'Feature deleted successfully.'
+        ]);
+    }
 }
