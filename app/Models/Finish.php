@@ -12,4 +12,5 @@ class Finish extends Model
     public function properties(){
         return $this->hasMany(Property::class);
     }
+
 }
