@@ -1,14 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CategoriesController;
-use App\Http\Controllers\FeaturesController;
-use App\Http\Controllers\SellTypesController;
-use App\Http\Controllers\SubCategoriesController;
-use App\Http\Controllers\PropertiesController;
-
-
 
 
 /*
@@ -25,6 +16,8 @@ use App\Http\Controllers\PropertiesController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+// Route::get('/')
 // Route::get('/test', function () {
 //     return view('dashboard');
 // });
