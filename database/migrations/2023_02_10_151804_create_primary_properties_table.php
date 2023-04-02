@@ -17,12 +17,17 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('delivery_date');
-            $table->string('payment_plan');
-            $table->string('developer_name');
-            $table->string('address');
+            $table->string('down_payment');
             $table->string('min_space');
             $table->string('max_space');
-            $table->string('price');
+
+
+            $table->string('min_price');
+            $table->string('max_price');
+            $table->string('min_total_price');
+            $table->string('min_Installment');
+            $table->string('Maintnance');
+
 
 
             $table->foreignId('location_id');

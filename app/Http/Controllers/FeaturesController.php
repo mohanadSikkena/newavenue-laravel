@@ -12,7 +12,7 @@ class FeaturesController extends Controller
 {
     public function api_index()
     {
-        $features = Feature::all();
+        $features = Feature::select('name','id')->get();
         return response()->json([
             'message' => 'Features retrieved successfully.',
             'data' => $features

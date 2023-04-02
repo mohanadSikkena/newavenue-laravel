@@ -17,6 +17,8 @@ class PrimaryPropertiesController extends Controller
     public function api_show($id){
         $property =PrimaryProperty::with('images:image,primary_property_id')
         ->with('location:name,id')
+        ->with('primary_type:name,id')
+
         ->find($id);
         return response()->json($property, 200);
     }
@@ -36,13 +38,16 @@ class PrimaryPropertiesController extends Controller
     $validator = Validator::make($request->all(), [
         'name' => 'required',
         'delivery_date' => 'required',
-        'payment_plan' => 'required',
-        'developer_name' => 'required',
-        'address' => 'required',
+        'down_payment' => 'required',
+        'min_price' => 'required',
+        'max_price' => 'required',
+        'min_total_price' => 'required',
+        'min_Installment' => 'required',
+        'Maintnance' => 'required',
         'min_space' => 'required',
         'max_space' => 'required',
-        'price' => 'required|numeric',
         'location_id' => 'required|exists:locations,id',
+        'primary_type_id' => 'required|exists:primary_types,id',
         'images.*' => 'required|image|max:2048',
     ]);
 
@@ -53,13 +58,20 @@ class PrimaryPropertiesController extends Controller
     // Create new primary property
     $property = new PrimaryProperty;
     $property->name = $request->input('name');
+    $property->min_price = $request->input('min_price');
+    $property->max_price = $request->input('max_price');
+    $property->min_total_price = $request->input('min_total_price');
+    $property->min_Installment = $request->input('min_Installment');
+    // $property->Gross = $request->input('Gross');
+    $property->Maintnance = $request->input('Maintnance');
+    $property->primary_type_id = $request->input('primary_type_id');
     $property->delivery_date = $request->input('delivery_date');
-    $property->payment_plan = $request->input('payment_plan');
-    $property->developer_name = $request->input('developer_name');
-    $property->address = $request->input('address');
+    $property->down_payment = $request->input('down_payment');
+    // $property->developer_name = $request->input('developer_name');
+    // $property->address = $request->input('address');
     $property->min_space = $request->input('min_space');
     $property->max_space = $request->input('max_space');
-    $property->price = $request->input('price');
+    // $property->price = $request->input('price');
     $property->location_id = $request->input('location_id');
     $property->save();
 

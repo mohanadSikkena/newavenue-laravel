@@ -27,7 +27,8 @@ class DatabaseSeeder extends Seeder
             SubCategorySeeder::class,
             FeaturesSeeder::class,
             FinishSeeder::class,
-            LicenceSeeder::class
+            LicenceSeeder::class,
+            PrimaryTypesSeeder::class
         ]);
     }
 }

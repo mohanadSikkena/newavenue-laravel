@@ -10,6 +10,7 @@ use App\Http\Controllers\SubCategoriesController;
 use App\Http\Controllers\LicencesController;
 
 use App\Http\Controllers\AdsController;
+use App\Http\Controllers\PrimaryTypesController;
 use App\Http\Controllers\FinishesController;
 use App\Http\Controllers\PrimaryPropertiesController;
 
@@ -120,6 +121,11 @@ Route::get('/finishes',[FinishesController::class,'api_index']);
 Route::post('/finishes',[FinishesController::class,'store'])->middleWare('auth:sanctum');
 Route::put('/finishes/{id}',[FinishesController::class,'update'])->middleWare('auth:sanctum');
 Route::delete('/finishes/{id}',[FinishesController::class,'destroy'])->middleWare('auth:sanctum');
+//***************************************primary types *************************************** */
+Route::get('/primary-types',[PrimaryTypesController::class,'api_index']);
+Route::post('/primary-types',[PrimaryTypesController::class,'api_store'])->middleWare('auth:sanctum');
+Route::put('/primary-types/{id}',[PrimaryTypesController::class,'api_update'])->middleWare('auth:sanctum');
+Route::delete('/primary-types/{id}',[PrimaryTypesController::class,'api_destroy'])->middleWare('auth:sanctum');
 
 
 //*******************************************ads ********************** */
