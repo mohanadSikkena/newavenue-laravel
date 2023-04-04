@@ -14,12 +14,12 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 |
 */
 
-// Route::get('/', [AuthenticatedSessionController::class, 'create']);
+Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 // Route::get('/')
-Route::get('/test', function () {
-    return view('dashboard');
-});
+// Route::get('/test', function () {
+//     return view('dashboard');
+// });
 // Route::get('/info', function () {
 //     return view('info');
 // });
