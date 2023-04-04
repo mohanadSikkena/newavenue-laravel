@@ -11,7 +11,8 @@ class Location extends Model
 
     public function primary(){
         return $this->hasMany(PrimaryProperty::class)
-        ->select(['id','name','delivery_date','price','min_space','max_space'])->with('images:image,primary_property_id');
+        ->select(['id','name','delivery_date','min_total_price','min_space','max_space'])
+        ->with('images:image,primary_property_id');
       }
 
 }
