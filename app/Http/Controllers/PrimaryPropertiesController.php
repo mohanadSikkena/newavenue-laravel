@@ -79,7 +79,7 @@ class PrimaryPropertiesController extends Controller
     // Save images
     if($request->hasFile('images')) {
         foreach($request->file('images') as $img) {
-            $name = $img->store('public/primary');
+            $name = $img->store('images/primary_images');
             $image = new Primary_image;
             $image->image = $name;
             $image->primary_property_id = $property->id;

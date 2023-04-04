@@ -7,7 +7,6 @@ use App\Models\Category;
 use App\Models\Property_image;
 use App\Models\Sub_category;
 use App\Models\Property_detail;
-use App\Models\AdProperty;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Http\Request;
@@ -177,7 +176,7 @@ class PropertiesController extends Controller
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $img) {
-                $name = $img->store('public/properties');
+                $name = $img->store('images/properties_images');
                 $image = new Property_image;
                 $image->image = $name;
                 $image->property_id = $property->id;

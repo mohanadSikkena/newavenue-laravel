@@ -86,7 +86,7 @@ class AuthController extends Controller
         $user->about=request("about");
 
         if($request->hasFile('image')){
-           $user->img= $request->file("image")->store('public/agents');
+           $user->img= $request->file("image")->store('images/agents');
         }
         $user->save();
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name')->default('agent name');
             $table->string('email')->unique();
             $table->string('phone');
-            $table->string('img')->default('public/agents/default.jpg');
+            $table->string('img')->default('images/agents/default.jpg');
             $table->string('description')->default('newavenue agent');
             $table->string('about')->default('new agent');
             $table->timestamp('email_verified_at')->nullable();

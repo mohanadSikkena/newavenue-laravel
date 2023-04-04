@@ -59,7 +59,7 @@ class AdsController extends Controller
 
             if ($request->hasFile('cover_image')) {
                 $img = $request->file('cover_image');
-                $name = $img->store('public/properties/ad_images');
+                $name = $img->store('images/ad_images');
                 $adProperty->cover_image = $name;
             }
 
