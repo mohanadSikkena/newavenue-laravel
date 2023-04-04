@@ -24,7 +24,8 @@ class PrimaryPropertiesController extends Controller
     }
     public function api_index(){
         $properties=PrimaryProperty::
-        with('images:primary_property_id,image')->get();
+        with('images:primary_property_id,image')->with('location:name,id')
+        ->with('primary_type:name,id')->get();
         return response()->json($properties, 200,);
     }
     public function api_store(Request $request)
