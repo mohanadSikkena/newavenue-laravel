@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,9 +14,7 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 // Route::get('/')
 // Route::get('/test', function () {
