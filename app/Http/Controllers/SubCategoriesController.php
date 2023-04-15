@@ -106,7 +106,8 @@ class SubCategoriesController extends Controller
             return response()->json(['error' => 'Category not found'], 404);
         }
 
-        $properties = $category->properties;
+        $properties = $category->properties()->where('sell_type_id', request('sale_type_id'))->get();
+
         return response()->json(['properties' => $properties], 200);
     }
 
