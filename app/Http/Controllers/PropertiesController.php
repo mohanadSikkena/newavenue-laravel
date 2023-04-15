@@ -58,6 +58,17 @@ class PropertiesController extends Controller
         ];
         return response()->json($response,200);
     }
+    public function api_index_v2(){
+
+        $query = Property::withCommonReleations()->where('confirmed', true);
+        $properties = $query->paginate(10);
+        $count = $query->count();
+        $response=[
+            "properties" => $properties,
+            "count" => $count,
+        ];
+        return response()->json($response,200);
+    }
 
     public function api_trash(){
         if(Auth::user()->isAdmin){

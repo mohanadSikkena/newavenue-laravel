@@ -14,7 +14,28 @@ class SubCategoriesController extends Controller
 
 
     public function api_index(){
-        $categories=Sub_category::select('id', 'name')->withCount('properties')->get();
+        $categories=Sub_category::select('id', 'name')->
+        withCount('properties')->get();
+        return response()->json($categories, 200,);
+    }
+
+
+    public function api_index_v2(){
+        $validator = Validator::make(['sell_type_id'=>request('sell_type_id')],
+         [
+            'sell_type_id' => 'required|integer'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Invalid Sale ID'], 400);
+        }
+        $categories=Sub_category::select('id', 'name')->
+        withCount([
+            'properties'=>function ($query) {
+                $query->where('sell_type_id', request('sell_type_id'));
+            }
+            ])
+
+        ->get();
         return response()->json($categories, 200,);
     }
 
@@ -60,6 +81,24 @@ class SubCategoriesController extends Controller
         $validator = Validator::make(['id' => $id], ['id' => 'required|integer']);
         if ($validator->fails()) {
             return response()->json(['error' => 'Invalid category ID'], 400);
+        }
+
+        $category = Sub_category::find($id);
+        if (!$category) {
+            return response()->json(['error' => 'Category not found'], 404);
+        }
+
+        $properties = $category->properties;
+        return response()->json(['properties' => $properties], 200);
+    }
+    public function api_getByCategory_v2($id) {
+        $validator = Validator::make(['id' => $id,'sale_type_id'=>request('sale_type_id')],
+         [
+            'id' => 'required|integer',
+            'sale_type_id' => 'required|integer'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Invalid category Or Sale ID'], 400);
         }
 
         $category = Sub_category::find($id);

@@ -65,6 +65,10 @@ Route::get('properties/{id}/accept-onhold',[PropertiesController::class,'api_acc
 Route::get('properties/{id}',[PropertiesController::class,'api_show']);
 
 
+//***********************************V2******************************** */
+Route::get('v2/properties',[PropertiesController::class,'api_index_v2']);
+Route::get('v2/properties/get-by-category/{id}',[SubCategoriesController::class,'api_getByCategory_v2']);
+Route::get('v2/categories',[SubCategoriesController::class,'api_index_v2']);
 
 
 
