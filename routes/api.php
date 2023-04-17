@@ -93,6 +93,7 @@ Route::delete('customers/{id}',[CustomersController::class,'api_delete_customer_
 Route::get('features',[FeaturesController::class,'api_index']);
 
 Route::delete('features/{id}/delete',[FeaturesController::class,'api_destroy'])->middleWare('auth:sanctum');
+Route::put('features/{id}',[FeaturesController::class,'api_update'])->middleWare('auth:sanctum');
 Route::post('features',[FeaturesController::class,'api_store'])->middleWare('auth:sanctum');
 
 

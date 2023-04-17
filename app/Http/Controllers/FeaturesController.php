@@ -76,4 +76,50 @@ class FeaturesController extends Controller
             'message' => 'Feature deleted successfully.'
         ]);
     }
+
+    public function api_update( $id)
+    {
+        if (!Auth::user()->isAdmin) {
+            return response()->json([
+                'message' => 'Only admins can update features.',
+            ], 403);
+        }
+
+        if (!is_numeric($id)) {
+            return response()->json([
+                'message' => 'The ID must be an integer.'
+            ], 422);
+        }
+        $feature = Feature::find($id);
+
+        if (!$feature) {
+            return response()->json([
+                'message' => 'feature not found.'
+            ], 404);
+        }
+        $validator = Validator::make(request()->all(), [
+            'name' => [
+                'required',
+                'max:255',
+                Rule::unique('features', 'name')->ignore($feature->id),
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation errors.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+
+
+        $feature->name = request()->input('name');
+        $feature->save();
+
+        return response()->json([
+            'message' => 'Feature updated successfully.',
+            'data' => $feature
+        ]);
+    }
 }
