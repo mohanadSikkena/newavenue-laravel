@@ -108,6 +108,7 @@ Route::get('primary/{id}',[PrimaryPropertiesController::class,'api_show']);
 Route::get('locations/{id}/primary',[LocationsController::class,'api_primary']);
 Route::get('locations',[LocationsController::class,'api_index']);
 Route::post('locations',[LocationsController::class,'api_store'])->middleWare('auth:sanctum');
+Route::put('locations/{id}',[LocationsController::class,'api_update'])->middleWare('auth:sanctum');
 Route::delete('locations/{id}/delete',[LocationsController::class,'api_destroy'])->middleWare('auth:sanctum');
 
 //****************************************Categories ************************* */
