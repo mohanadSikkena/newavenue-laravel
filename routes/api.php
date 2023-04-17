@@ -114,7 +114,7 @@ Route::delete('locations/{id}/delete',[LocationsController::class,'api_destroy']
 Route::get('categories',[SubCategoriesController::class,'api_index']);
 Route::post('categories',[SubCategoriesController::class,'api_store'])->middleWare('auth:sanctum');
 Route::delete('categories/{id}/delete',[SubCategoriesController::class,'api_destroy'])->middleWare('auth:sanctum');
-
+Route::put('/categories/{id}',[SubCategoriesController::class,'api_update'])->middleWare('auth:sanctum');
 //***************************************Licences ************************************/
 Route::get('/licences',[LicencesController::class,'api_index']);
 Route::post('/licences',[LicencesController::class,'store'])->middleWare('auth:sanctum');

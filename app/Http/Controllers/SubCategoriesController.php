@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Validation\Rule;
 
 use Illuminate\Http\Request;
 use App\Models\Sub_category;
@@ -20,6 +21,8 @@ class SubCategoriesController extends Controller
     }
 
 
+
+
     public function api_index_v2(){
         $validator = Validator::make(['sell_type_id'=>request('sell_type_id')],
          [
@@ -37,6 +40,52 @@ class SubCategoriesController extends Controller
 
         ->get();
         return response()->json($categories, 200,);
+    }
+
+    public function api_update( $id)
+    {
+        if (!Auth::user()->isAdmin) {
+            return response()->json([
+                'message' => 'Only admins can update Categories.',
+            ], 403);
+        }
+
+        if (!is_numeric($id)) {
+            return response()->json([
+                'message' => 'The ID must be an integer.'
+            ], 422);
+        }
+        $category = Sub_category::find($id);
+
+        if (!$category) {
+            return response()->json([
+                'message' => 'category not found.'
+            ], 404);
+        }
+        $validator = Validator::make(request()->all(), [
+            'name' => [
+                'required',
+                'max:255',
+                Rule::unique('licences', 'name')->ignore($category->id),
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation errors.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+
+
+        $category->name = request()->input('name');
+        $category->save();
+
+        return response()->json([
+            'message' => 'Category updated successfully.',
+            'data' => $category
+        ]);
     }
 
     public function api_store(Request $request) {
