@@ -55,9 +55,7 @@ class CustomersController extends Controller
             return response()->json([
                 'message' => 'Property added to favourites',
             ], 200);
-        }
-
-        if (count($result) === 1) {
+        }else{
             DB::table('customer_property')
                 ->where('customer_id', $customer_id)
                 ->where('property_id', $property_id)
@@ -67,6 +65,8 @@ class CustomersController extends Controller
                 'message' => 'Property removed from favourites',
             ], 200);
         }
+
+
     }
 
     public function api_add_customer_property(Request $request)
