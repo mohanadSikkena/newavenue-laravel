@@ -41,7 +41,7 @@ class Property extends Model
 
     public function similarProperties()
     {
-        $properties = Property::with('images')->where('id', '!=', $this->id)->get();
+        $properties = Property::with('images')->where('id', '!=', $this->id)->where("confirmed",true)->get();
 
         return $properties->sortByDesc(function ($property) {
             return $property->similarityScore($this);
