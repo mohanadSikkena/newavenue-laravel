@@ -283,6 +283,8 @@ class PropertiesController extends Controller
         ->find($id);
         $property->views+=1;
         $property->save();
+        $similarProperties = $property->similarProperties();
+        $property->similarProperties=$similarProperties;
         return response()->json($property, 200);
     }
 

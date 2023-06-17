@@ -39,6 +39,31 @@ class Property extends Model
     }
 
 
+    public function similarProperties()
+    {
+        $properties = Property::with('images')->where('id', '!=', $this->id)->get();
+
+        return $properties->sortByDesc(function ($property) {
+            return $property->similarityScore($this);
+        })->take(5)->values()->all();
+    }
+
+    public function similarityScore($property)
+    {
+        $score = 0;
+        // Compare agent
+        if ($property->agent_id === $this->agent_id) $score += 1;
+        // Compare sell type
+        if ($property->sell_type_id === $this->sell_type_id) $score += 1;
+        // Compare sub-category
+        if ($property->sub_category_id === $this->sub_category_id) $score += 1;
+        // Compare licence
+        if ($property->licence_id === $this->licence_id) $score += 1;
+        // Compare finish
+        if ($property->finish_id === $this->finish_id) $score += 1;
+//        echo $score;
+        return $score;
+    }
 
 
 
