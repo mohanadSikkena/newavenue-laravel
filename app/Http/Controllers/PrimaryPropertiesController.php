@@ -18,8 +18,10 @@ class PrimaryPropertiesController extends Controller
         $property =PrimaryProperty::with('images:image,primary_property_id')
         ->with('location:name,id')
         ->with('primary_type:name,id')
-
         ->find($id);
+
+        $similarProperties=$property->similarProperties();
+        $property->similarProperties=$similarProperties;
         return response()->json($property, 200);
     }
     public function api_index(){

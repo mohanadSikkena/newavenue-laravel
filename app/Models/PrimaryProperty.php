@@ -24,4 +24,23 @@ class PrimaryProperty extends Model
     }
 
 
+    public function similarProperties()
+    {
+        $properties = PrimaryProperty::with('images')
+            ->where('id', '!=', $this->id)
+            ->get();
+        return $properties->sortByDesc(function ($property) {
+            return $property->similarityScore($this);
+        })->take(5)->values()->all();
+    }
+
+
+    public function similarityScore($property){
+        $score=0;
+        if ($property->primary_type_id === $this->primary_type_id) $score += 1;
+        if ($property->location_id === $this->location_id) $score += 1;
+
+    }
+
+
 }
